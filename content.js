@@ -1,6 +1,6 @@
 // Объявление переменной для хранения идентификатора интервала
-var intervalId;
-var intervalId1;
+let button_search_timeout;
+let redirect_timeout;
 
 
 // Функция для поиска кнопки и нажатия
@@ -13,7 +13,7 @@ function findAndClickButton() {
     }
 }
 // Непрерывная проверка наличия кнопки и нажатие
-intervalId = setInterval(findAndClickButton, 2000); // Сохраняем идентификатор интервала
+button_search_timeout = setInterval(findAndClickButton, 2000); // Сохраняем идентификатор интервала
 
 // Вызов функции сразу после загрузки страницы
 findAndClickButton();
@@ -32,7 +32,7 @@ function checkAndRedirect() {
 }
 
 // Непрерывная проверка изменения URL
-intervalId1 = setInterval(checkAndRedirect, 3000); // Проверять каждую секунду (можете изменить интервал по вашему желанию)
+redirect_timeout = setInterval(checkAndRedirect, 3000); // Проверять каждую секунду (можете изменить интервал по вашему желанию)
 
 // Вызов функции сразу после загрузки страницы
 checkAndRedirect();
