@@ -1,3 +1,6 @@
+// Объявление переменной для хранения идентификатора интервала
+var intervalId;
+
 if (document.location.href === 'https://nekto.me/audiochat#/') {
     // Функция для поиска кнопки и нажатия
     function findAndClickButton() {
@@ -8,7 +11,7 @@ if (document.location.href === 'https://nekto.me/audiochat#/') {
     }
 
     // Непрерывная проверка наличия кнопки и нажатие
-    setInterval(findAndClickButton, 1000); // Проверять каждую секунду (можете изменить интервал по вашему желанию)
+    intervalId = setInterval(findAndClickButton, 1000); // Сохраняем идентификатор интервала
 
     // Вызов функции сразу после загрузки страницы
     findAndClickButton();
@@ -31,3 +34,9 @@ setInterval(checkAndRedirect, 1000); // Проверять каждую секу
 
 // Вызов функции сразу после загрузки страницы
 checkAndRedirect();
+
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+    if (message.action === 'stop') {
+        clearInterval(intervalId); // Остановка выполнения функции из content.js
+    }
+});
