@@ -30,7 +30,7 @@ function checkAndRedirect() {
 }
 
 // Непрерывная проверка изменения URL
-setInterval(checkAndRedirect, 1000); // Проверять каждую секунду (можете изменить интервал по вашему желанию)
+intervalId = setInterval(checkAndRedirect, 2000); // Проверять каждую секунду (можете изменить интервал по вашему желанию)
 
 // Вызов функции сразу после загрузки страницы
 checkAndRedirect();
