@@ -1,20 +1,28 @@
 /* styles.css */
-#popupContainer {
-    width: 100px;
-    height: 30px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
+html {
+  margin: 0px;
+  padding: 0px;
+  background-color:  #101417;
   }
   
-  button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-  }
+  #popupContainer {
+      display: flex;
+      background-color: #101417;
+      width: 130px;
+      height: 40px;
+    }
+    
+    button {
+      background-color: #1b1e23;
+      color: #3bb93b;
+      border: 10;
+      border-radius: 30%;
+      border-color: #3bb93b;
+      margin: 0 auto;
+      cursor: pointer;
   
-  button:hover {
-    background-color: #0056b3;
-  }
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
