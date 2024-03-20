@@ -15,7 +15,7 @@ html {
     button {
       background-color: #1b1e23;
       color: #3bb93b;
-      border: 10;
+      border: 1px solid;
       border-radius: 100px;
       border-color: #3bb93b;
       margin: 0 auto;

@@ -1,16 +1,13 @@
 let isOn = false;
-  const button = document.getElementById('toggleButton');
-  
-  function toggleState() {
-      if (isOn) {
-          button.textContent = 'Выключено';
-          isOn = false;
-          // Действия при выключенном состоянии
-          console.log('Кнопка выключена');
-      } else {
-          button.textContent = 'Включено';
-          isOn = true;
-          // Действия при включенном состоянии
-          console.log('Кнопка включена');
-      }
+const button = document.getElementById('toggleButton');
+
+button.addEventListener('click', () => {
+  isOn = !isOn;
+  if (isOn) {
+    button.textContent = 'Включено';
+    // Добавьте здесь код для включенного состояния
+  } else {
+    button.textContent = 'Выключено';
+    // Добавьте здесь код для выключенного состояния
   }
+});
