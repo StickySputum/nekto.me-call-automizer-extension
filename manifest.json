@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Focus Mode",
-  "description": "Enable focus mode on Chrome's official Extensions and Chrome Web Store documentation.",
+  "name": "Nekto.me call automizer",
+  "description": "Automatically restarts nekto.me call",
   "version": "1.0",
   "icons": {
     "48": "images/icon-48.png"
