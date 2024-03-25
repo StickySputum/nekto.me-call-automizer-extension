@@ -3,13 +3,6 @@
 const nektoMeSite = 'nekto.me';
 let var_interval;
 
-
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.action.setBadgeText({
-    text: 'OFF'
-  });
-});
-
 chrome.action.onClicked.addListener(async (tab) => {
   if (tab.url.includes(nektoMeSite)) {
     const prevState = await chrome.action.getBadgeText({ tabId: tab.id });

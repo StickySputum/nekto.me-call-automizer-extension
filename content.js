@@ -11,12 +11,18 @@ function findAndClickButton() {
 
 function checkAndRedirect() {
     if (document.location.href.includes('/peer')) {
-        // Изменено на поиск элемента по классу
-        var redirectLink = document.querySelector('.btn.btn-lg.go-idle-button');
-        if (redirectLink) {
-            // Если кнопка найдена, симулируем клик на неё
-            redirectLink.click();
+        const talkLabel = document.querySelector('.talk-label');
+
+        // Проверяем, содержит ли элемент именно этот текст
+        if (talkLabel && talkLabel.textContent.trim() === 'Разговор завершен') {
+            console.log('Элемент содержит текст "Разговор завершен".');
+            var redirectLink = document.querySelector('.btn.btn-lg.go-idle-button');
+            if (redirectLink) {
+                // Если кнопка найдена, симулируем клик на неё
+                redirectLink.click();
+            }
         }
+    
     }
 }
 
