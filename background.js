@@ -1,69 +1,74 @@
-// background.js
-
 const nektoMeSite = 'nekto.me';
 let var_interval;
 
-const setBadgeTextOnTab = (tabId, text) => {
-  chrome.action.setBadgeText({ tabId, text });
+// Функция обновления значка для всех вкладок
+const updateBadgeForAllTabs = async (state) => {
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach(tab => {
+      chrome.action.setBadgeText({ tabId: tab.id, text: state });
+    });
+  });
 };
 
-// Обработчик для события обновления вкладки
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (tab.url.includes(nektoMeSite)) {
-    getStateFromStorage(tabId).then((state) => {
-      setBadgeTextOnTab(tabId, state);
+// Получает глобальное состояние (ON/OFF)
+const getGlobalState = async () => {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['globalState'], (result) => {
+      resolve(result.globalState || 'OFF');
     });
+  });
+};
+
+// Сохраняет глобальное состояние и обновляет значки
+const saveGlobalState = async (state) => {
+  chrome.storage.local.set({ globalState: state }, () => {
+    updateBadgeForAllTabs(state);
+  });
+};
+
+// При клике по иконке переключаем состояние везде
+chrome.action.onClicked.addListener(async () => {
+  const prevState = await getGlobalState();
+  const nextState = prevState === 'ON' ? 'OFF' : 'ON';
+
+  clearInterval(var_interval);
+
+  if (nextState === 'ON') {
+    var_interval = setInterval(() => {
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+          if (tab.url && tab.url.includes(nektoMeSite)) {
+            chrome.scripting.executeScript({
+              target: { tabId: tab.id },
+              files: ['content.js']
+            });
+          }
+        });
+      });
+    }, 2000);
+  }
+
+  await saveGlobalState(nextState);
+});
+
+// Обновление значка при переключении вкладок
+chrome.tabs.onActivated.addListener(() => {
+  getGlobalState().then(updateBadgeForAllTabs);
+});
+
+// Обновление значка при загрузке новой вкладки
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === "complete") {
+    getGlobalState().then(updateBadgeForAllTabs);
   }
 });
 
-// Функция для получения состояния из хранилища
-const getStateFromStorage = async (tabId) => {
-  return new Promise((resolve) => {
-    chrome.storage.local.get(['badgeState'], (result) => {
-      const badgeState = result.badgeState || {};
-      resolve(badgeState[tabId] || 'OFF');
-    });
-  });
-};
+// При старте расширения обновляем значки
+chrome.runtime.onStartup.addListener(() => {
+  getGlobalState().then(updateBadgeForAllTabs);
+});
 
-// Функция для сохранения состояния в хранилище
-const saveStateToStorage = (tabId, state) => {
-  chrome.storage.local.get(['badgeState'], (result) => {
-    const badgeState = result.badgeState || {};
-    badgeState[tabId] = state;
-    chrome.storage.local.set({ badgeState });
-  });
-};
-
-chrome.action.onClicked.addListener(async (tab) => {
-  if (tab.url.includes(nektoMeSite)) {
-    const prevState = await getStateFromStorage(tab.id);
-    const nextState = prevState === 'ON' ? 'OFF' : 'ON';
-
-    await chrome.action.setBadgeText({
-      tabId: tab.id,
-      text: nextState
-    });
-
-    clearInterval(var_interval);
-
-    if (nextState === 'ON') {
-      var_interval = setInterval(() => {
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          files: ['content.js']
-        });
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          function: 'findAndClickButton'
-        });
-        chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          function: 'checkAndRedirect'
-        });
-      }, 2000);
-    }
-
-    saveStateToStorage(tab.id, nextState);
-  }
+// При установке расширения инициализируем состояние
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.local.set({ globalState: 'OFF' }, updateBadgeForAllTabs);
 });
